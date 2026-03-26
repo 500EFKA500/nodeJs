@@ -119,7 +119,7 @@ const showMenu = async() => {
                 break;
             default:
                 showMenu();
-                break;
+                break;        
     };
 };
 
