@@ -1,0 +1,12 @@
+{   
+    "manifest_version": 3,
+
+    "name": "Images-Loader",
+    "description": "",
+    "version": "0.0.1",
+    "icons": {},
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "background": ""
+}
