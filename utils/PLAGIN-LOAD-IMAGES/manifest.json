@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Page Image Loader",
+  "description": "Collects image URLs from the active tab.",
+  "version": "1.0.0",
+  "action": {
+    "default_title": "Image Loader",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"]
+}
