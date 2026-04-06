@@ -1,0 +1,40 @@
+name: Codex change code
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "Что Codex должен сделать"
+        required: true
+        default: "Исправь очевидные ошибки в проекте с минимальными изменениями"
+
+jobs:
+  codex:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Codex CLI
+        run: npm install -g @openai/codex
+
+      - name: Run Codex
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          codex exec "${{ github.event.inputs.task }}" \
+            --full-auto
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          commit-message: "Codex update"
+          branch: codex/${{ github.run_id }}
+          title: "Codex: ${{ github.event.inputs.task }}"
+          body: "Автоматически созданный PR через GitHub Actions."
