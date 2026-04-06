@@ -1,0 +1,38 @@
+name: Codex change code
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "Что Codex должен сделать"
+        required: true
+        default: "Найди и исправь очевидные баги с минимальными изменениями"
+
+jobs:
+  codex:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+
+      - name: Run Codex
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt: ${{ github.event.inputs.task }}
+          sandbox: workspace-write
+          safety-strategy: drop-sudo
+          codex-args: --full-auto
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          commit-message: "Codex update"
+          branch: codex/${{ github.run_id }}
+          title: "Codex: ${{ github.event.inputs.task }}"
+          body: "Этот PR был создан автоматически Codex через GitHub Actions."
